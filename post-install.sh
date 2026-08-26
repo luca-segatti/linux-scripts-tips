@@ -22,7 +22,7 @@ fi
 # Déclaration des paquets
 
 INST_BAS="aptitude sysstat apt-transport-https lsb-release ca-certificates haveged chrony"
-INST_OUT="vim htop nload tmux net-tools curl rsync"
+INST_OUT="vim htop btop nload tmux net-tools curl rsync"
 INST_SEC="ipset ipset-persistent netfilter-persistent iptables-persistent fail2ban unattended-upgrades"
 INST_SHL="zsh zsh-antigen"
 INST_UTILS="sssd sssd-tools realmd adcli krb5-user libpam-sss libnss-sss oddjob oddjob-mkhomedir nfs-common cifs-utils smbclient"
