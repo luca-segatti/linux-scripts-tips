@@ -1,11 +1,23 @@
-####################################################################################################
+#!/bin/bash - 
+#===============================================================================
 #
-#				     Script: post-install.sh
-#	Usecase: Use this script to install some tools on a freshly-installed Linux system
-#
-####################################################################################################
+#          FILE: post-install.sh
+# 
+#         USAGE: sudo ./post-install.sh 
+# 
+#   DESCRIPTION: Installs some usefull tools and configs on a new linux machine
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: needs to be run as root
+#          BUGS: ---
+#         NOTES: ---
+#        AUTHOR: Luca SEAGATTI (), 
+#  ORGANIZATION: 
+#       CREATED: 26/08/2026 09:18
+#      REVISION:  ---
+#===============================================================================
 
-set -euo pipefail
+set -o nounset                              # Treat unset variables as an error
 
 LOG_FILE="/var/log/postinstall.log"
 exec > > (tee -a "$LOG_FILE") 2>&1
