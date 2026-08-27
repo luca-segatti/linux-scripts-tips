@@ -544,10 +544,6 @@ Pour ajouter nos vhosts dans le DNS, il faut freeze le DNS dynamique si présent
 
 Mettre en place un DDNS
 
-## Installation du DDNS
-
-Comme pour le cours → CF page Installation d’une infrastructure dans la page sur la configuration des serveurs Linux
-
 ## Désactivation de ftp et mise en place de sftp
 
 ### Le principe
