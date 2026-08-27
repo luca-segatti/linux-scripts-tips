@@ -126,7 +126,7 @@ sudo tsig-keygen dhcp-ns >dhcp-ns.key #sur le serveur DHCP
 Ensuite on la copie et sécurise :
 ``` bash
 sudo cp dhcp-ns.key /etc/bind
-sudo chown root:root /etc/bind/dhcp-ns.key
+sudo chown root:bind /etc/bind/dhcp-ns.key
 sudo chmod 640 /etc/bind/dhcp-ns.key
 ```
 
