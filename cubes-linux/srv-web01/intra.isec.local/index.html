@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intranet ISEC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:       #101E2E;
+    --ink-soft:  #4A5A68;
+    --paper:     #EEF1EF;
+    --panel:     #FFFFFF;
+    --line:      #D7DCD9;
+    --amber:     #C1801E;
+    --amber-soft:#F3E4C9;
+    --teal:      #2C6B6E;
+    --teal-soft: #DCEBEA;
+    --radius: 3px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3{
+    font-family:'Space Grotesk', sans-serif;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+
+  a{ color:inherit; }
+
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible{
+    outline:2px solid var(--amber);
+    outline-offset:2px;
+  }
+
+  /* ---------- Topbar ---------- */
+
+  .topbar{
+    background:var(--ink);
+    color:var(--paper);
+    border-bottom:3px solid var(--amber);
+  }
+
+  .topbar-inner{
+    max-width:1120px;
+    margin:0 auto;
+    padding:14px 24px;
+    display:flex;
+    align-items:center;
+    gap:24px;
+  }
+
+  .wordmark{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    flex-shrink:0;
+  }
+
+  .wordmark .name{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:0.02em;
+  }
+
+  .wordmark .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--amber);
+    border:1px solid var(--amber);
+    padding:2px 6px;
+    border-radius:var(--radius);
+  }
+
+  .search{
+    flex:1;
+    max-width:420px;
+  }
+
+  .search input{
+    width:100%;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:var(--radius);
+    color:var(--paper);
+    padding:8px 12px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:13px;
+  }
+
+  .search input::placeholder{ color:rgba(238,241,239,0.5); }
+
+  .auth{
+    margin-left:auto;
+    flex-shrink:0;
+  }
+
+  .auth a{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    font-weight:500;
+    text-decoration:none;
+    color:var(--paper);
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:var(--radius);
+    padding:7px 14px;
+    transition:border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .auth a:hover{
+    border-color:var(--amber);
+    background:rgba(255,255,255,0.06);
+  }
+
+  /* ---------- Info band ---------- */
+
+  .infoband{
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+  }
+
+  .infoband-inner{
+    max-width:1120px;
+    margin:0 auto;
+    padding:16px 24px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+
+  .infoband-date{ font-size:13px; color:var(--ink-soft); }
+  .infoband-date strong{ color:var(--ink); font-weight:600; }
+
+  .stats{ display:flex; gap:28px; }
+  .stat{ text-align:right; }
+  .stat .num{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:20px; line-height:1; }
+  .stat .label{ font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); }
+
+  /* ---------- Layout ---------- */
+
+  main{
+    max-width:1120px;
+    margin:0 auto;
+    padding:32px 24px 56px;
+    display:grid;
+    grid-template-columns:1fr 340px;
+    gap:28px;
+    align-items:start;
+  }
+
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:16px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .section-head h2{ font-size:17px; font-weight:600; }
+
+  /* ---------- News ---------- */
+
+  .news{ display:flex; flex-direction:column; gap:14px; }
+
+  .news-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:3px solid var(--teal);
+    border-radius:var(--radius);
+    padding:18px 20px;
+  }
+
+  .news-card.priority{ border-left-color:var(--amber); }
+
+  .news-meta{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+  }
+
+  .pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:2px 8px;
+    border-radius:20px;
+    background:var(--teal-soft);
+    color:var(--teal);
+  }
+
+  .pill.amber{ background:var(--amber-soft); color:var(--amber); }
+
+  .news-date{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+
+  .news-card h3{ font-size:15.5px; font-weight:600; margin-bottom:6px; }
+  .news-card p{ margin:0; font-size:13.5px; color:var(--ink-soft); }
+
+  /* ---------- Sidebar ---------- */
+
+  .sidebar{ display:flex; flex-direction:column; gap:24px; }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px 20px;
+  }
+
+  .quicklinks{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; }
+
+  .quicklinks li{ border-bottom:1px solid var(--line); }
+  .quicklinks li:last-child{ border-bottom:none; }
+
+  .quicklinks a{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:11px 2px;
+    text-decoration:none;
+    font-size:13.5px;
+    font-weight:500;
+    transition:color 0.15s ease;
+  }
+
+  .quicklinks a:hover{ color:var(--teal); }
+  .quicklinks a .arrow{ color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; }
+
+  /* ---------- Network widget ---------- */
+
+  .sitesmap-panel h2{ font-size:14px; font-weight:600; margin-bottom:2px; }
+  .sitesmap-panel .sub{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft); letter-spacing:0.04em; margin-bottom:14px; display:block; }
+
+  .sitesmap{ width:100%; height:auto; display:block; }
+
+  .sitesmap .node circle{ fill:var(--panel); stroke:var(--teal); stroke-width:2; }
+  .sitesmap .node.hq circle{ fill:var(--ink); stroke:var(--amber); }
+  .sitesmap .node text{ text-anchor:middle; }
+  .sitesmap .node .city{ font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:11px; fill:var(--ink); }
+  .sitesmap .node.hq .city{ fill:var(--paper); font-size:13px; }
+  .sitesmap .node .tag{ font-family:'IBM Plex Mono', monospace; font-size:8.5px; letter-spacing:0.04em; fill:var(--amber); }
+  .sitesmap .node .count{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; fill:var(--ink-soft); }
+  .sitesmap .node.hq .count{ fill:var(--amber-soft); }
+
+  .sitesmap .link{ stroke:var(--line); stroke-width:2; }
+
+  @media (prefers-reduced-motion:no-preference){
+    .sitesmap .hq circle{ animation:pulse 3.2s ease-in-out infinite; transform-origin:center; }
+  }
+
+  @keyframes pulse{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.06); }
+  }
+
+  /* ---------- Footer ---------- */
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:20px 24px;
+  }
+
+  .footer-inner{
+    max-width:1120px;
+    margin:0 auto;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    gap:12px;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+
+  .footer-inner a{ text-decoration:none; color:var(--teal); font-weight:500; }
+
+  /* ---------- Responsive ---------- */
+
+  @media (max-width:840px){
+    main{ grid-template-columns:1fr; }
+    .search{ order:3; max-width:none; width:100%; }
+    .topbar-inner{ flex-wrap:wrap; }
+    .stats{ gap:18px; }
+  }
+
+  @media (max-width:480px){
+    .infoband-inner{ flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="wordmark">
+        <span class="name">ISEC</span>
+        <span class="tag">Intranet</span>
+      </div>
+      <div class="search">
+        <input type="text" placeholder="Rechercher dans l'intranet…" aria-label="Rechercher dans l'intranet">
+      </div>
+      <div class="auth">
+        <a href="#">Se connecter →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="infoband">
+    <div class="infoband-inner">
+      <div class="infoband-date"><strong id="today-date">—</strong> — Semaine <span id="today-week">—</span></div>
+      <div class="stats">
+        <div class="stat">
+          <div class="num">4</div>
+          <div class="label">Sites</div>
+        </div>
+        <div class="stat">
+          <div class="num">7 750</div>
+          <div class="label">Collaborateurs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section>
+      <div class="section-head">
+        <h2>Actualités</h2>
+        <span class="mono" style="color:var(--ink-soft);">3 publications</span>
+      </div>
+
+      <div class="news">
+        <article class="news-card priority">
+          <div class="news-meta">
+            <span class="pill amber">IT</span>
+            <span class="news-date">14 août 2026</span>
+          </div>
+          <h3>Migration des services réseau vers l'infrastructure Linux</h3>
+          <p>Les services DNS et DHCP basculent progressivement vers la nouvelle infrastructure du siège. La bascule se fait site par site d'ici la fin du mois, sans interruption attendue côté utilisateurs. Un incident constaté&nbsp;? Ouvrez un ticket sur GLPI.</p>
+        </article>
+
+        <article class="news-card">
+          <div class="news-meta">
+            <span class="pill">Sécurité</span>
+            <span class="news-date">12 août 2026</span>
+          </div>
+          <h3>Exercice d'évacuation — site de Toulouse</h3>
+          <p>Un exercice d'évacuation est prévu le 28 août sur le site de production. Les consignes détaillées sont transmises par les responsables d'atelier dans les prochains jours.</p>
+        </article>
+
+        <article class="news-card">
+          <div class="news-meta">
+            <span class="pill">RH</span>
+            <span class="news-date">8 août 2026</span>
+          </div>
+          <h3>Résultats du baromètre social</h3>
+          <p>Les résultats de l'enquête menée en juin sont disponibles sur l'espace RH. Taux de participation&nbsp;: 68&nbsp;%. Merci à toutes celles et ceux qui ont répondu.</p>
+        </article>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="panel">
+        <div class="section-head" style="margin-bottom:10px; padding-bottom:8px;">
+          <h2 style="font-size:14px;">Accès rapides</h2>
+        </div>
+        <ul class="quicklinks">
+          <li><a href="http://glpi.isec.local">Déclarer un incident (GLPI) <span class="arrow">→</span></a></li>
+          <li><a href="#">Annuaire interne <span class="arrow">→</span></a></li>
+          <li><a href="#">Demander des congés <span class="arrow">→</span></a></li>
+          <li><a href="#">Documents RH <span class="arrow">→</span></a></li>
+          <li><a href="#">Réserver une salle <span class="arrow">→</span></a></li>
+        </ul>
+      </div>
+
+      <div class="panel sitesmap-panel">
+        <h2>Nos sites</h2>
+        <span class="sub">Implantations en France</span>
+
+        <svg class="sitesmap" viewBox="0 0 320 268" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Carte des sites ISEC : siège à Paris, sites de production au Havre, à Bordeaux et à Toulouse, avec leurs effectifs">
+          <line class="link" x1="160" y1="90" x2="64" y2="54"></line>
+          <line class="link" x1="160" y1="90" x2="80" y2="210"></line>
+          <line class="link" x1="160" y1="90" x2="240" y2="222"></line>
+
+          <g class="node">
+            <circle cx="64" cy="54" r="34"></circle>
+            <text class="city" x="64" y="51">Le Havre</text>
+            <text class="count" x="64" y="65">1 500</text>
+          </g>
+
+          <g class="node hq">
+            <circle cx="160" cy="90" r="44"></circle>
+            <text class="city" x="160" y="82">Paris</text>
+            <text class="tag" x="160" y="94">SIÈGE</text>
+            <text class="count" x="160" y="107">550</text>
+          </g>
+
+          <g class="node">
+            <circle cx="80" cy="210" r="34"></circle>
+            <text class="city" x="80" y="207">Bordeaux</text>
+            <text class="count" x="80" y="221">2 200</text>
+          </g>
+
+          <g class="node">
+            <circle cx="240" cy="222" r="34"></circle>
+            <text class="city" x="240" y="219">Toulouse</text>
+            <text class="count" x="240" y="233">3 500</text>
+          </g>
+        </svg>
+
+        <span class="sub" style="margin-top:10px; margin-bottom:0;">Effectif par site (collaborateurs)</span>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div>© ISEC — Direction des Systèmes d'Information</div>
+      <div>Assistance informatique — <a href="http://glpi.isec.local">glpi.isec.local</a></div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var now = new Date();
+
+      var dateFmt = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      var dateStr = dateFmt.format(now);
+      dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+
+      function isoWeek(d) {
+        var date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        var day = date.getUTCDay() || 7;
+        date.setUTCDate(date.getUTCDate() + 4 - day);
+        var yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+        return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+      }
+
+      document.getElementById('today-date').textContent = dateStr;
+      document.getElementById('today-week').textContent = isoWeek(now);
+    })();
+  </script>
+
+</body>
+</html>
