@@ -50,37 +50,9 @@ On installe ensuite les paquets `kea` et `kea-doc` pour gérer notre DHCP. Le fi
 
 Attention, `kea` attend maintenant un id dans le json du fichier de config, voilà celui qui a été utilisé :
 
+Pour télécharger le fichier de config kea depuis le github, taper sur le serveur :
 ```bash
-{                                                                                                                                                                                                                                            
-"Dhcp4": {                                                                                                                                                                                                                                   
-    "interfaces-config": {                                                                                                                                                                                                                   
-        "interfaces": [ "ens33" ]                                                                                                                                                                                                            
-    },                                                                                                                                                                                                                                       
-    "lease-database": {                                                                                                                                                                                                                      
-        "type": "memfile",                                                                                                                                                                                                                   
-        "persist": true,                                                                                                                                                                                                                     
-        "name": "/var/lib/kea/kea-leases4.csv"                                                                                                                                                                                               
-    },                                                                                                                                                                                                                                       
-    "valid-lifetime": 3600,                                                                                                                                                                                                                  
-    "renew-timer": 1800,                                                                                                                                                                                                                     
-    "rebind-timer": 3150,                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                             
-    "subnet4": [                                                                                                                                                                                                                             
-        {                                                                                                                                                                                                                                    
-            "id": 1,                                                                                                                                                                                                                         
-            "subnet": "192.168.0.0/24",                                                                                                                                                                                                      
-            "pools": [ { "pool": "192.168.0.100 - 192.168.0.199" } ],                                                                                                                                                                        
-            "option-data": [                                                                                                                                                                                                                 
-                { "name": "routers", "data": "192.168.0.254" },                                                                                                                                                                              
-                { "name": "domain-name-servers", "data": "192.168.0.200, 192.168.0.201" },                                                                                                                                                   
-                { "name": "domain-name", "data": "isec.local" }                                                                                                                                                                              
-            ],                                                                                                                                                                                                                               
-            "ddns-qualifying-suffix": "isec.local" #Potentiellement utilisé si DDNS plus tard                                                                                                                                                                                           
-        }                                                                                                                                                                                                                                    
-    ],                                                                                                                                                                                                                                       
-                                                                                                                                                                                                                                             
-}                                                                                                                                                                                                                                            
-} 
+wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/kea-dhcp4.conf
 ```
 
 ### 2. Serveur DNS primaire
