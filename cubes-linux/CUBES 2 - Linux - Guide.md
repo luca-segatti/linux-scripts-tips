@@ -80,7 +80,7 @@ Editer le fichier pour vérifier que rien n'est à changer
 Avant d'utiliser le fichier de configuration dispo en faisant :
 
 ```bash
-https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-net01/named.conf.options
+wget https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-net01/named.conf.options
 sudo cp named.conf.options /etc/bind/ 
 ```
 
