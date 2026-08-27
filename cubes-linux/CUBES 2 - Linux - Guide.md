@@ -113,6 +113,69 @@ sudo cp db.192.168.1 /var/lib/bind
 
 Editer le fichier pour vérifier que rien n'est à changer
 
+**Configuration du DDNS
+
+On commence par stopper les services DNS `sudo systemctl stop named bind9`.
+On doit bien avoir nos fichiers de zone dans `/var/lib/bind`.
+
+Ensuite on génère une clef `tsig` pour chiffrer le DDNS :
+```bash
+sudo tsig-keygen dhcp-ns >dhcp-ns.key #sur le serveur DHCP
+```
+
+Ensuite on la copie et sécurise :
+``` bash
+sudo cp dhcp-ns.key /etc/bind
+sudo chown root:root /etc/bind/dhcp-ns.key
+sudo chmod 640 /etc/bind/dhcp-ns.key
+```
+
+Ensuite redémarrer les services `bind9` et `named`.
+
+Après cela on installe le paquet `kea-dhcp-ddns-server` s'il n'a pas déjà été installé.
+On lui donne la clef créée précédemment en faisant :
+
+```bash
+cp dhcp-ns.key tsig-keys.json
+```
+
+Et on la formate de cette manière :
+
+```bash
+"tsig-keys": [
+        {
+                "name": "dhcp-ns",
+                "algorithm":  "hmac-sha256",
+                "secret": "SECRET"
+        }
+],
+```
+
+La partie SECRET doit être le contenu de la clef créée à l'instant (visible en faisant `cat dhcp-ns.key`
+
+**Attention :** vi peut cacher les guillemets en json, il faut peut-être les rajouter pour que le fichier fonctionne (visible si des mots sont surlignés en rouge = erreur).
+
+Ensuite, on récupère le fichier de configuration ddns avec :
+
+```bash
+wget https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-net01/kea-dhcp-ddns.conf
+sudo cp tsig-keys.json kea-dhcp-ddns.conf /etc/kea
+```
+
+Puis, on change les autorisations pour éviter les problèmes :
+
+```bash
+sudo chown _kea:root /etc/kea/{tsig-keys.json,kea-dhcp-ddns.conf}
+sudo chmod 640 /etc/kea/{tsig-keys.json,kea-dhcp-ddns.conf}
+sudo -u _kea kea-dhcp-ddns -t /etc/kea/kea-dhcp-ddns.conf #Sensé renvoyer "Configuration check successful" à la fin
+```
+
+Enfin, on redémarre tous nos services :
+
+```bash
+sudo systemctl restart named bind9 kea-dhcp4-server kea-dhcp-ddns-server
+```
+
 **Configuration finale**
 
 Une fois que cette config est prête, on peut changer notre NS dans `/etc/resolv.conf`  :
