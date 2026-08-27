@@ -250,6 +250,13 @@ Pour Samba, on utilise le fichier de configuration suivant :
 
 
 ```bash
+wget https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-web01/smb.conf
+sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.sav
+sudo cp smb.conf /etc/bind/smb.conf
+```
+
+
+```bash
 sudo testparm #vérifie la syntaxe avant de relancer
 sudo systemctl restart smbd nmbd
 ```
