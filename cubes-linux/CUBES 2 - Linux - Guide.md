@@ -149,7 +149,7 @@ sudo apt update && sudo apt install bind9{,utils,-doc,-dnsutils}
 On déclare à nouveau nos zones dans `/etc/bind/named.conf.local` avec un fichier différent du DNS primaire. Ce fichier est disponible en faisant :
 
 ```bash
-wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net02/named.conf.local
+wget https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-net02/named.conf.local
 sudo cp named.conf.local /etc/bind/named.conf.local
 ```
 
@@ -158,7 +158,7 @@ Editer le fichier pour vérifier que rien n'est à changer
 Mêmes options que sur le primaire, dans `/etc/bind/named.conf.options` :
 
 ```bash
-wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net02/named.conf.options
+wget https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-net02/named.conf.options
 sudo cp named.conf.options /etc/bind/named.conf.options
 ```
 
