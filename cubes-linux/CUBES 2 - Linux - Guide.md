@@ -203,20 +203,19 @@ Pour la configuration du serveur web, on installe Apache pour héberger nos deux
 sudo apt update
 sudo apt install apache2
 sudo mkdir -p /var/www/intra.isec.local /var/www/glpi.isec.local
-echo "<h1>Intranet</h1>" | sudo tee /var/www/intra.isec.local/index.html
-echo "<h1>GLPI</h1>" | sudo tee /var/www/glpi.isec.local/index.html
+wget -P /var/www/intra.isec.local/ https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-web01/intra.isec.local/index.html
+wget -P /var/www/glpi.isec.local/ https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-web01/glpi.isec.local/index.html
 ```
 
 On déclare ensuite les deux vhosts dans `/etc/apache2/sites-available/` :
 
 ```bash
-<VirtualHost *:80>
-    ServerName intra.isec.local
-    DocumentRoot /var/www/intra.isec.local
-</VirtualHost>
+sudo wget -P /etc/apache2/sites-available/ https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-web01/{glpi,intra}.isec.local.conf
 ```
 
-(idem pour `glpi.isec.local`, en changeant le `ServerName` et le `DocumentRoot`)
+Normalement ces fichiers n'ont pas besoins d'être modifiés.
+
+Ensuite on active nos sites et désactive le site par défaut d'Apache :
 
 ```bash
 sudo a2ensite intra.isec.local glpi.isec.local
@@ -247,22 +246,8 @@ sudo smbpasswd -a rosea
 sudo smbpasswd -a grohld
 ```
 
-Dans `/etc/samba/smb.conf` :
+Pour Samba, on utilise le fichier de configuration suivant :
 
-- **`encrypt passwords = no`** → à supprimer/commenter, reliquat obsolète qui peut faire échouer l’authentification avec des clients Windows récents (qui n’envoient jamais de mot de passe en clair)
-- `[homes]` → à commenter, sinon ça fait doublon avec notre partage `[web]` (nos comptes n’ont pas de home directory)
-- on rajoute notre partage en bas du fichier :
-
-```bash
-[web]
-   path = /var/www
-   valid users = @webdev
-   force group = webdev
-   create mask = 0664
-   directory mask = 0775
-   writable = yes
-   browsable = yes
-```
 
 ```bash
 sudo testparm #vérifie la syntaxe avant de relancer
