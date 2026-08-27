@@ -75,7 +75,7 @@ wget https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/head
 sudo cp named.conf.local /etc/bind/ 
 ```
 
-Editer le fichier pour vérifier que rien n'est à changer
+Editer le fichier pour vérifier que rien n'est à changer, il faut notamment changer le forwarder vers le forwarder sur le réseau NAT VMWare
 
 Avant d'utiliser le fichier de configuration dispo en faisant :
 
@@ -162,7 +162,7 @@ wget https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/head
 sudo cp named.conf.options /etc/bind/named.conf.options
 ```
 
-Editer le fichier pour vérifier que rien n'est à changer
+Editer le fichier pour vérifier que rien n'est à changer. Modifier les forwarders comme pour le premier
 
 Ici, les fichiers de zone ne seront pas nécessaires car seront transférés via `srv-net01`
 
