@@ -1,0 +1,24 @@
+// Fichier à mettre sur srv-net01 dans /var/lib/bind/db.isec.local
+$TTL 604800     ; 1 week                                                                                             
+isec.local.             IN SOA  srv-net01.isec.local. admin.isec.local. (
+                                2026082618 ; serial
+                                604800     ; refresh (1 week)
+                                86400      ; retry (1 day)
+                                2419200    ; expire (4 weeks)
+                                604800     ; minimum (1 week)
+                                )
+                        NS      srv-net01.isec.local.
+                        NS      srv-net02.isec.local.
+                        A       192.168.0.202
+$TTL 1200       ; 20 minutes
+client.isec.local.      A       192.168.0.101
+                        DHCID   ( AAEBjjd2XCSgPd8nPoOoSP+8Llr0KyUaLQyskZD01Se1
+                                jbI= ) ; 1 1 32
+$TTL 604800     ; 1 week
+glpi.isec.local.        CNAME   web.isec.local.
+intra.isec.local.       CNAME   web.isec.local.
+opnsense.isec.local.    A       192.168.0.254
+srv-net01.isec.local.   A       192.168.0.200
+srv-net02.isec.local.   A       192.168.0.201
+srv-web01.isec.local.   A       192.168.0.202
+web.isec.local.         CNAME   srv-web01.isec.local.

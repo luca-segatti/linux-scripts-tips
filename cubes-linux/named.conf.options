@@ -1,0 +1,12 @@
+// Fichier à mettre sur srv-net01 dans /etc/bind/named.conf.options
+options {                                                                                                            
+        directory "/var/cache/bind";
+        forwarders {
+                192.168.100.2;
+        };
+        dnssec-validation auto;
+        listen-on { 127.0.0.1; 192.168.0.200; };
+        allow-recursion { 192.168.0.0/24; 127.0.0.1; };
+        allow-query { any; };
+};
+

@@ -1,0 +1,28 @@
+// Fichier à mettre sur le serveur srv-net01 dans /etc/bind/named.conf.local
+//                                                                                                                   
+// Do any local configuration here
+//
+
+include "/etc/bind/dhcp-ns.key";
+
+zone "isec.local" {
+    type master;
+    file "/var/lib/bind/db.isec.local";
+//    allow-update { key dhcp-ns; };
+    allow-transfer { 192.168.0.201; };
+    also-notify { 192.168.0.201; };
+    update-policy{
+       grant dhcp-ns wildcard *.isec.local A DHCID;
+};
+};
+
+zone "0.168.192.in-addr.arpa" {
+    type master;
+    file "/var/lib/bind/db.192.168.0";
+//    allow-update { key kea-ddns-key; };
+    allow-transfer { 192.168.0.201; };
+    also-notify { 192.168.0.201; };
+    update-policy{
+       grant dhcp-ns wildcard *.0.168.192.in-addr.arpa PTR;
+};
+};

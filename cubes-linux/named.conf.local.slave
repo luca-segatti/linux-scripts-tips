@@ -1,0 +1,16 @@
+// Fichier à mettre sur srv-net02 dans /etc/bind/named.conf.local
+//                                                                                                                   
+// Do any local configuration here
+//
+
+zone "isec.local" {
+        type slave;
+        file "/var/cache/bind/db.isec.local";
+        masters { 192.168.0.200; };
+};
+
+zone "0.168.192.in-addr.arpa" {
+        type slave;
+        file "/var/cache/bind/db.192.168.0";
+        masters { 192.168.0.200; };
+};

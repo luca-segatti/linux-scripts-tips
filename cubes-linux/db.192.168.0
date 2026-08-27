@@ -1,0 +1,17 @@
+// Fichier à mettre sur srv-net01 dans /var/lib/bind/db.192.168.0
+$TTL    604800
+@       IN      SOA     srv-net01.isec.local. admin.isec.local. (                                                    
+        ¦       ¦       ¦     3         ; Serial
+        ¦       ¦       ¦604800         ; Refresh
+        ¦       ¦       ¦ 86400         ; Retry
+        ¦       ¦       2419200         ; Expire
+        ¦       ¦       ¦604800 )       ; Negative Cache TTL
+;
+@       IN      NS      srv-net01.isec.local.
+@       IN      NS      srv-net02.isec.local.
+
+200      IN      PTR     srv-net01.isec.local.
+201      IN      PTR     srv-net02.isec.local.
+202      IN      PTR     srv-web.isec.local.
+254      IN      PTR     opnsense.isec.local.
+
