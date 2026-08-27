@@ -113,7 +113,7 @@ sudo cp db.192.168.0 /var/lib/bind/
 
 Editer le fichier pour vérifier que rien n'est à changer
 
-**Configuration du DDNS
+**Configuration du DDNS**
 
 On commence par stopper les services DNS `sudo systemctl stop named bind9`.
 On doit bien avoir nos fichiers de zone dans `/var/lib/bind`.
