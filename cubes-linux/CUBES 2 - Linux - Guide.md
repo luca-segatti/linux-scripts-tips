@@ -555,7 +555,8 @@ On veut que `ulrichl`/`rosea`/`grohld` gardent un accès en lecture/écriture su
 bash
 
 ```bash
-sudo systemctl disable --now vsftpdsudo systemctl mask vsftpd   # empêche un démarrage accidentel (dépendance, reboot...)
+sudo systemctl disable --now vsftpd
+sudo systemctl mask vsftpd   # empêche un démarrage accidentel (dépendance, reboot...)
 ```
 
 ### 2. Vérifier que le sous-système SFTP est bien déclaré
