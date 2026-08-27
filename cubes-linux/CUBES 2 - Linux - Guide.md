@@ -1,4 +1,4 @@
-# 2- CUBES 2 Sujet 2 : Serveurs Linux (1)
+# 2- CUBES 2 Sujet 2 : Serveurs Linux
 
 # Plan d’infra réseau
 
@@ -18,7 +18,7 @@ Concernant les adresses IP, ont été retenues :
 - `SRV-WEB` ⇒ 192.168.0.202
 - `OPNSENSE` ⇒ 192.168.0.254
 
-Pour faciliter l’administration (et l’accès en ssh), des règles de pare-feu seront érigées, avec les paramètres :
+Pour faciliter l’administration (et l’accès en ssh), des règles de DNAT seront érigées sur l'OPNSense, avec les paramètres :
 
 - port 2222 → `SRV-NET01:22`
 - port 2223 → `SRV-NET02:22`
@@ -43,12 +43,11 @@ Concernant les partitions, on sépare sur le disque de 20Go :
 Ensuite, on met une ip fixe sur notre serveur dans `/etc/network/interfaces` , pour la suite on passera la VM en `vmnet2` avec notre OPNSense du cours Linux en RTR.
 
 On peut aussi mettre notre dns externe pour l’instant avec `/etc/resolv.conf` 
+Ce DNS doit être l'adresse IP de l'ordinateur portable dans le NAT VMWare
 
 ### 1. Serveur DHCP kea
 
-On installe ensuite les paquets `kea` et `kea-doc` pour gérer notre DHCP. Le fichier de config est celui de Renaud avec les domaines et DNS modifiés.
-
-Attention, `kea` attend maintenant un id dans le json du fichier de config, voilà celui qui a été utilisé :
+On installe ensuite les paquets `kea` et `kea-doc` pour gérer notre DHCP. Le fichier de config a déjà été modifié pour les besoins du projet.
 
 Pour télécharger le fichier de config kea depuis le github, taper sur le serveur depuis `~` :
 
@@ -75,6 +74,7 @@ On peut utiliser le fichier de configuration depuis qui contient également la z
 wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/named.conf.local
 sudo cp named.conf.local /etc/bind/ 
 ```
+
 Editer le fichier pour vérifier que rien n'est à changer
 
 Avant d'utiliser le fichier de configuration dispo en faisant :
@@ -83,6 +83,7 @@ Avant d'utiliser le fichier de configuration dispo en faisant :
 wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/named.conf.options
 sudo cp named.conf.options /etc/bind/ 
 ```
+
 Editer le fichier pour vérifier que rien n'est à changer
 
 On créée ensuite le fichier de zone directe dans `/etc/bind/db.isec.local` :
@@ -93,6 +94,7 @@ Ce fichier est dispo en faisant :
 wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/db.isec.local
 sudo cp db.isec.local /var/lib/bind 
 ```
+
 Editer le fichier pour vérifier que rien n'est à changer
 
 On a déjà rajouté nos enregistrements CNAME pour `intra.isec.local` et `glpi.isec.local`.
@@ -108,6 +110,7 @@ Comme toujours, le fichier est dans :
 wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/db.192.168.1
 sudo cp db.192.168.1 /var/lib/bind
 ```
+
 Editer le fichier pour vérifier que rien n'est à changer
 
 **Configuration finale**
@@ -124,8 +127,8 @@ Ensuite, on fait ces commandes pour vérifier et activer la config :
 
 ```bash
 sudo named-checkconf #Vérifie la configuration DNS et indique les erreurs
-sudo named-checkzone isec.local /etc/bind/db.isec.local #Pareil pour la zone directe
-sudo named-checkzone 0.168.192.in-addr.arpa /etc/bind/db.192.168.0 #Pareil pour la zone inversée
+sudo named-checkzone isec.local /var/lib/bind/db.isec.local #Pareil pour la zone directe
+sudo named-checkzone 0.168.192.in-addr.arpa /var/lib/bind/db.192.168.0 #Pareil pour la zone inversée
 sudo systemctl restart bind9 #Toujours restart la config ensuite
 ```
 
@@ -143,38 +146,25 @@ On installe les mêmes paquets que sur `srv-net01` :
 sudo apt update && sudo apt install bind9{,utils,-doc,-dnsutils}
 ```
 
-On déclare nos zones en **esclave** dans `/etc/bind/named.conf.local` — pas de fichier de zone à écrire à la main ici, bind9 va le récupérer par transfert de zone (AXFR) depuis `srv-net01` :
+On déclare à nouveau nos zones dans `/etc/bind/named.conf.local` avec un fichier différent du DNS primaire. Ce fichier est disponible en faisant :
 
 ```bash
-zone "isec.local" {
-    type slave;
-    file "/var/cache/bind/db.isec.local";
-    masters { 192.168.0.200; };
-};
-
-zone "0.168.192.in-addr.arpa" {
-    type slave;
-    file "/var/cache/bind/db.192.168.0";
-    masters { 192.168.0.200; };
-};
+wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net02/named.conf.local
+sudo cp named.conf.local /etc/bind/named.conf.local
 ```
+
+Editer le fichier pour vérifier que rien n'est à changer
 
 Mêmes options que sur le primaire, dans `/etc/bind/named.conf.options` :
 
 ```bash
-options {
-    directory "/var/cache/bind";
-
-    forwarders {
-        192.168.100.2; #Adresse de mon ordinateur sur le réseau NAT (WAN OPNSense)
-    };
-
-    dnssec-validation auto;
-    listen-on { 127.0.0.1; 192.168.0.201; };
-    allow-recursion { 192.168.0.0/24; 127.0.0.1; };
-    allow-query { any; };
-};
+wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net02/named.conf.options
+sudo cp named.conf.options /etc/bind/named.conf.options
 ```
+
+Editer le fichier pour vérifier que rien n'est à changer
+
+Ici, les fichiers de zone ne seront pas nécessaires car seront transférés via `srv-net01`
 
 On met à jour `/etc/resolv.conf` :
 
