@@ -53,6 +53,7 @@ Attention, `kea` attend maintenant un id dans le json du fichier de config, voil
 Pour télécharger le fichier de config kea depuis le github, taper sur le serveur :
 ```bash
 wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/kea-dhcp4.conf
+sudo cp kea-dhcp4.conf /etc/kea/ 
 ```
 
 ### 2. Serveur DNS primaire
