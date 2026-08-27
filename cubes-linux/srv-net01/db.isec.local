@@ -1,4 +1,3 @@
-// Fichier à mettre sur srv-net01 dans /var/lib/bind/db.isec.local
 $TTL 604800     ; 1 week                                                                                             
 isec.local.             IN SOA  srv-net01.isec.local. admin.isec.local. (
                                 2026082618 ; serial
