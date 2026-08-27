@@ -108,7 +108,7 @@ Comme toujours, le fichier est dans :
 
 ```bash
 wget https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-net01/db.192.168.0
-sudo cp db.192.168.1 /var/lib/bind/
+sudo cp db.192.168.0 /var/lib/bind/
 ```
 
 Editer le fichier pour vérifier que rien n'est à changer
