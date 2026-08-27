@@ -57,6 +57,8 @@ wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/sr
 sudo cp kea-dhcp4.conf /etc/kea/ 
 ```
 
+Editer le fichier pour vérifier que rien n'est à changer
+
 ### 2. Serveur DNS primaire
 
 Une fois notre serveur DHCP installé, on passe au DNS. Pour cela, on installe les paquets nécessaires :
@@ -73,6 +75,7 @@ On peut utiliser le fichier de configuration depuis qui contient également la z
 wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/named.conf.local
 sudo cp named.conf.local /etc/bind/ 
 ```
+Editer le fichier pour vérifier que rien n'est à changer
 
 Avant d'utiliser le fichier de configuration dispo en faisant :
 
@@ -80,6 +83,7 @@ Avant d'utiliser le fichier de configuration dispo en faisant :
 wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/named.conf.options
 sudo cp named.conf.options /etc/bind/ 
 ```
+Editer le fichier pour vérifier que rien n'est à changer
 
 On créée ensuite le fichier de zone directe dans `/etc/bind/db.isec.local` :
 
@@ -89,6 +93,7 @@ Ce fichier est dispo en faisant :
 wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/db.isec.local
 sudo cp db.isec.local /var/lib/bind 
 ```
+Editer le fichier pour vérifier que rien n'est à changer
 
 On a déjà rajouté nos enregistrements CNAME pour `intra.isec.local` et `glpi.isec.local`.
 
@@ -103,6 +108,7 @@ Comme toujours, le fichier est dans :
 wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/db.192.168.1
 sudo cp db.192.168.1 /var/lib/bind
 ```
+Editer le fichier pour vérifier que rien n'est à changer
 
 **Configuration finale**
 
