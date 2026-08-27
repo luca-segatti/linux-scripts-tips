@@ -50,7 +50,8 @@ On installe ensuite les paquets `kea` et `kea-doc` pour gérer notre DHCP. Le fi
 
 Attention, `kea` attend maintenant un id dans le json du fichier de config, voilà celui qui a été utilisé :
 
-Pour télécharger le fichier de config kea depuis le github, taper sur le serveur :
+Pour télécharger le fichier de config kea depuis le github, taper sur le serveur depuis `~` :
+
 ```bash
 wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/kea-dhcp4.conf
 sudo cp kea-dhcp4.conf /etc/kea/ 
@@ -66,91 +67,41 @@ Une fois notre serveur DHCP installé, on passe au DNS. Pour cela, on installe l
 
 **Zone de recherche DNS directe** 
 
-Ensuite, on déclare notre zone DNS directe dans `/etc/bind/named.conf.local`  :
+On peut utiliser le fichier de configuration depuis qui contient également la zone inversée et les paramètres de renvoi vers le deuxième serveur à placer dans `/etc/bind/named.conf.local` :
 
 ```bash
-zone "isec.local" {
-    type master;
-    file "/etc/bind/db.isec.local";
-    allow-transfer { 192.168.0.201; };   // futur SRV-NET02 en secondaire
-    also-notify { 192.168.0.201; };
-};
+wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/named.conf.local
+sudo cp named.conf.local /etc/bind/ 
 ```
 
-Avant de déclarer nos options de zone dans `/etc/bind/named.conf.options` :
+Avant d'utiliser le fichier de configuration dispo en faisant :
 
 ```bash
-options {
-    directory "/var/cache/bind";
-
-    forwarders {
-        192.168.100.2; #Adresse de mon ordinateur sur le réseau NAT (WAN OPNSense)
-    };
-
-    dnssec-validation no;
-    listen-on { 127.0.0.1; 192.168.0.200; };
-    allow-recursion { 192.168.0.0/24; 127.0.0.1; };
-    allow-query { any; };
-};
+wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/named.conf.options
+sudo cp named.conf.options /etc/bind/ 
 ```
 
 On créée ensuite le fichier de zone directe dans `/etc/bind/db.isec.local` :
 
+Ce fichier est dispo en faisant :
+
 ```bash
-$TTL    604800                                                                                                                                                                                                                               
-@       IN      SOA     srv-net01.isec.local. admin.isec.local. (                                                                                                                                                                            
-                              3         ; Serial                                                                                                                                                                                             
-                         604800         ; Refresh                                                                                                                                                                                            
-                          86400         ; Retry                                                                                                                                                                                              
-                        2419200         ; Expire                                                                                                                                                                                             
-                         604800 )       ; Negative Cache TTL                                                                                                                                                                                 
-;                                                                                                                                                                                                                                            
-@           IN      NS      srv-net01.isec.local.                                                                                                                                                                                            
-@           IN      NS      srv-net02.isec.local.
-@.          IN      A       192.168.0.202                                                                                                                                                                                            
-                                                                                                                                                                                                                                             
-srv-net01   IN      A       192.168.0.200                                                                                                                                                                                                    
-srv-net02   IN      A       192.168.0.201                                                                                                                                                                                                    
-srv-web     IN      A       192.168.0.202                                                                                                                                                                                                    
-opnsense    IN      A       192.168.0.254                                                                                                                                                                                                    
-                                                                                                                                                                                                                                             
-intra       IN      A       192.168.0.202                                                                                                                                                                                                    
-glpi        IN      A       192.168.0.202
+wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/db.isec.local
+sudo cp db.isec.local /var/lib/bind 
 ```
 
-On a déjà rajouté nos enregistrements A pour `intra.isec.local` et `glpi.isec.local`.
+On a déjà rajouté nos enregistrements CNAME pour `intra.isec.local` et `glpi.isec.local`.
 
 **Zone de recherche DNS inversée**
 
-Une fois que notre zone de recherche directe est OK, on peut faire notre zone de recherche inversée, on rajoute à `/etc/bind/named.conf.local`  :
+Une fois que notre de recherche directe est OK, on peut passer à notre zone de recherche inversée.
+On a déjà ajouté dans le fichier `/etc/bind/named.conf.local` notre déclaration de zone, on peut donc directement passer à la création du fichier de zone dans `/var/lib/bind`.
+
+Comme toujours, le fichier est dans :
 
 ```bash
-zone "0.168.192.in-addr.arpa" {
-    type master;
-    file "/etc/bind/db.192.168.0";
-    allow-transfer { 192.168.0.201; };
-    also-notify { 192.168.0.201; };
-};
-```
-
-Puis on créée notre fichier de zone inversée `/etc/bind/db.192.168.0` :
-
-```bash
-$TTL    604800                                                                                                                                                                                                                               
-@       IN      SOA     srv-net01.isec.local. admin.isec.local. (                                                                                                                                                                            
-                              3         ; Serial                                                                                                                                                                                             
-                         604800         ; Refresh                                                                                                                                                                                            
-                          86400         ; Retry                                                                                                                                                                                              
-                        2419200         ; Expire                                                                                                                                                                                             
-                         604800 )       ; Negative Cache TTL                                                                                                                                                                                 
-;                                                                                                                                                                                                                                            
-@       IN      NS      srv-net01.isec.local.                                                                                                                                                                                                
-@       IN      NS      srv-net02.isec.local.                                                                                                                                                                                                
-                                                                                                                                                                                                                                             
-200      IN      PTR     srv-net01.isec.local.                                                                                                                                                                                               
-201      IN      PTR     srv-net02.isec.local.                                                                                                                                                                                               
-202      IN      PTR     srv-web.isec.local.                                                                                                                                                                                                 
-254      IN      PTR     opnsense.isec.local. 
+wget https://github.com/luca-segatti/linux-scripts-tips/blob/main/cubes-linux/srv-net01/db.192.168.1
+sudo cp db.192.168.1 /var/lib/bind
 ```
 
 **Configuration finale**
