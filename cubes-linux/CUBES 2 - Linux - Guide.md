@@ -372,20 +372,11 @@ find / -user <ANCIEN_UID> -exec chown -h <USERNAME> {} \;
 sudo apt install vsftpd
 ```
 
-Dans `/etc/vsftpd.conf` :
-
+Le fichier de config est dispo dans :
 ```bash
-local_enable=YES
-write_enable=YES
-chroot_local_user=YES
-allow_writeable_chroot=YES
-local_umask=002
-userlist_enable=YES
-userlist_file=/etc/vsftpd.userlist
-userlist_deny=NO
-```
-
+sudo wget -P /etc/ https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-web01/vsftpd.conf
 ```bash
+
 printf "ulrichl\nrosea\ngrohld\n" | sudo tee /etc/vsftpd.userlist
 sudo systemctl restart vsftpd
 ```
