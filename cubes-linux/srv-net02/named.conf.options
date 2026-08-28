@@ -5,7 +5,7 @@ options {
                 192.168.100.2;
         };
         dnssec-validation no;
-        listen-on { 127.0.0.1; 192.168.0.200; };
+        listen-on { 127.0.0.1; 192.168.0.201; };
         allow-recursion { 192.168.0.0/24; 127.0.0.1; };
         allow-query { any; };
 };
