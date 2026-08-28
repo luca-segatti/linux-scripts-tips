@@ -375,8 +375,8 @@ sudo apt install vsftpd
 Le fichier de config est dispo dans :
 ```bash
 sudo wget -P /etc/ https://raw.githubusercontent.com/luca-segatti/linux-scripts-tips/refs/heads/main/cubes-linux/srv-web01/vsftpd.conf
+```
 ```bash
-
 printf "ulrichl\nrosea\ngrohld\n" | sudo tee /etc/vsftpd.userlist
 sudo systemctl restart vsftpd
 ```
